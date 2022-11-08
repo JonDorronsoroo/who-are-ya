@@ -1,6 +1,9 @@
 import { folder, leftArrow } from "./fragments.js";
 import { fetchJSON } from "./loaders.js";
 
+import {setupRows} from "./rows.js";
+export { getSolution, differenceInDays}
+
 function differenceInDays(base) {
   // YOUR CODE HERE
   let gaur = new Date()
@@ -28,9 +31,9 @@ let game = {
 
  
 function getSolution(players, solutionArray, differenceInDays) {
-  let id = solutionArray[differenceInDays-1].id;
-  let jokalaria = players.filter(jokalaria => jokalaria.id == id);
-
+  // YOUR CODE HERE
+  let id = solutionArray[differenceInDays-1].id
+  let jokalaria = players.filter(jokalaria => jokalaria.id == id)
   return jokalaria[0]
 }
 
@@ -45,8 +48,18 @@ Promise.all([fetchJSON("fullplayers"), fetchJSON("solution")]).then(
 
     console.log(game.solution);
 
-    document.getElementById(
-      "mistery"
-    ).src = `https://playfootball.games/media/players/${game.solution.id % 32}/${game.solution.id}.png`;
+    document.getElementById("mistery").src = `https://playfootball.games/media/players/${game.solution.id % 32}/${game.solution.id}.png`;
+
+    // YOUR CODE HERE
+    let addRow = setupRows(game);
+    // get myInput object...
+    let input = document.getElementById("myInput")
+    // when the user types a number an press the Enter key:
+    document.addEventListener("keydown", e => {
+      if(e.key == 'Enter'){
+        addRow(input.value)
+      }
+    })
+
   }
 )
