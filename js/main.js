@@ -1,6 +1,6 @@
 import { folder, leftArrow } from "./fragments.js";
 import { fetchJSON } from "./loaders.js";
-
+import { autocomplete } from "./autocomplete.js";
 import {setupRows} from "./rows.js";
 export { getSolution, differenceInDays}
 
@@ -50,8 +50,12 @@ Promise.all([fetchJSON("fullplayers"), fetchJSON("solution")]).then(
 
     document.getElementById("mistery").src = `https://playfootball.games/media/players/${game.solution.id % 32}/${game.solution.id}.png`;
 
+    //ejercicio 8
+    autocomplete(document.getElementById("myInput"),game)
+
     // YOUR CODE HERE
-    let addRow = setupRows(game);
+    
+    /*let addRow = setupRows(game);
     // get myInput object...
     let input = document.getElementById("myInput")
     // when the user types a number an press the Enter key:
@@ -59,7 +63,8 @@ Promise.all([fetchJSON("fullplayers"), fetchJSON("solution")]).then(
       if(e.key == 'Enter'){
         addRow(input.value)
       }
-    })
-
+    })*/
+    
+    
   }
 )

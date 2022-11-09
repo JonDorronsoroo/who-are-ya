@@ -5,7 +5,9 @@
 import { fetchJSON } from "./loaders.js";
 import { getSolution, differenceInDays} from "./main.js";
 import {stringToHTML} from  "./fragments.js";
+import { higher,lower } from "./fragments.js";
 export {setupRows}
+
 
 const delay = 350;
 const attribs = ['nationality', 'leagueId', 'teamId', 'position', 'birthdate']
@@ -63,13 +65,16 @@ let setupRows = function (game) {
     }
 
     function setContent(guess) {
+    
         return [
             `<img src="https://playfootball.games/who-are-ya/media/nations/${guess.nationality.toLowerCase()}.svg" alt="" style="width: 60%;">`,
             `<img src="https://playfootball.games/media/competitions/${leagueToFlag(guess.leagueId)}.png" alt="" style="width: 60%;">`,
             `<img src="https://cdn.sportmonks.com/images/soccer/teams/${guess.teamId % 32}/${guess.teamId}.png" alt="" style="width: 60%;">`,
             `${guess.position}`,
             `${getAge(guess.birthdate)}`
+
         ]
+
     }
 
     function showContent(content, guess) {
