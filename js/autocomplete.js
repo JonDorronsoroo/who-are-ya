@@ -85,6 +85,15 @@ function autocomplete(inp, game) {
         }
     });
 
+    inp.onfocus = function(event){
+        inp.value = "";
+
+
+
+
+        
+    }
+
     // players.find ( p => { return p.id == 47323 })
 
     function addActive(x) {

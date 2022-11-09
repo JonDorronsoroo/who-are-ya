@@ -3,10 +3,11 @@
 // .... setupRows .....
 
 import { fetchJSON } from "./loaders.js";
-import { getSolution, differenceInDays} from "./main.js";
-import {stringToHTML} from  "./fragments.js";
-import { higher,lower } from "./fragments.js";
-export {setupRows}
+import { getSolution, differenceInDays } from "./main.js";
+import { stringToHTML } from "./fragments.js";
+import { higher, lower } from "./fragments.js";
+import { initState } from "./stats.js";
+export { setupRows }
 
 
 const delay = 350;
@@ -15,57 +16,77 @@ const attribs = ['nationality', 'leagueId', 'teamId', 'position', 'birthdate']
 
 let setupRows = function (game) {
 
+    let [state, updateState] = initState('WAYgameState', game.solution.id)
+
 
     function leagueToFlag(leagueId) {
         // YOUR CODE HERE
         return (leagueId == 564) ? "es1" :
             (leagueId == 8) ? "en1" :
-            (leagueId == 82) ? "de1" :
-            (leagueId == 384) ? "it1" :
-            (leagueId == 301) ? "fr1" : "NaN"
+                (leagueId == 82) ? "de1" :
+                    (leagueId == 384) ? "it1" :
+                        (leagueId == 301) ? "fr1" : "NaN"
     }
 
     function getAge(dateString) {
         // YOUR CODE HERE
         let gaur = new Date()
-        let date = new Date(dateString.substr(5,2) + "-" + dateString.substr(8,2) + "-" + dateString.substr(0,4))
+        let date = new Date(dateString.substr(5, 2) + "-" + dateString.substr(8, 2) + "-" + dateString.substr(0, 4))
         let edad = gaur.getFullYear() - date.getFullYear()
-        if (gaur.getMonth() < date.getMonth()){
+        if (gaur.getMonth() < date.getMonth()) {
             edad = edad - 1;
         } else if (gaur.getMonth() == date.getMonth() && gaur.getDate() < date.getDate()) {
             edad = edad - 1;
         }
         return edad
     }
-    
+
     let check = function (theKey, theValue) {
         // YOUR CODE HERE
         let misterioso = game.solution
         let atributo
         attribs.forEach(a => {
-            if (a == theKey){
+            if (a == theKey) {
                 atributo = theKey
             }
         })
-        if (atributo == "birthdate"){
-            if (misterioso[atributo] == theValue){
+        if (atributo == "birthdate") {
+            if (misterioso[atributo] == theValue) {
                 return "correct"
-            }else if (misterioso[atributo] > theValue){
+            } else if (misterioso[atributo] > theValue) {
                 return "lower"
-            }else{
+            } else {
                 return "higher"
             }
-        }else{
-            if (misterioso[atributo] == theValue){
+        } else {
+            if (misterioso[atributo] == theValue) {
                 return "correct"
-            } else{
+            } else {
                 return "incorrect"
             }
         }
     }
+    function unblur(outcome) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                document.getElementById("mistery").classList.remove("hue-rotate-180", "blur")
+                document.getElementById("combobox").remove()
+                let color, text
+                if (outcome == 'success') {
+                    color = "bg-blue-500"
+                    text = "Awesome"
+                } else {
+                    color = "bg-rose-500"
+                    text = "The player was " + game.solution.name
+                }
+                document.getElementById("picbox").innerHTML += `<div class="animate-pulse fixed z-20 top-14 left-1/2 transform -translate-x-1/2 max-w-sm shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden ${color} text-white"><div class="p-4"><p class="text-sm text-center font-medium">${text}</p></div></div>`
+                resolve();
+            }, "2000")
+        })
+    }
 
     function setContent(guess) {
-    
+
         return [
             `<img src="https://playfootball.games/who-are-ya/media/nations/${guess.nationality.toLowerCase()}.svg" alt="" style="width: 60%;">`,
             `<img src="https://playfootball.games/media/competitions/${leagueToFlag(guess.leagueId)}.png" alt="" style="width: 60%;">`,
@@ -100,18 +121,67 @@ let setupRows = function (game) {
         playersNode.prepend(stringToHTML(child))
     }
 
-    let getPlayer = function (playerId) {
-            // YOUR CODE HERE 
-            let jokalaria = game.players.filter(jokalaria => jokalaria.id == playerId);
-            return jokalaria[0]
+    function resetInput() {
+        // YOUR CODE HERE
+        let item = JSON.parse(localStorage.getItem("WAYgameState"));
+        document.getElementById("myInput").value = "Guess " + item[0].guesses.length + " of 8";
+
     }
 
-    return /* addRow */ function (playerId) {
 
+    let getPlayer = function (playerId) {
+        // YOUR CODE HERE 
+        let jokalaria = game.players.filter(jokalaria => jokalaria.id == playerId);
+        return jokalaria[0]
+    }
+
+    function gameEnded(lastGuess) {
+        // YOUR CODE HERE
+        if ((lastGuess == game.solution.id) || (game.guesses.length == 8 && lastGuess != game.solution.id)) {
+            return true;
+        } else {
+            return false;
+
+
+
+
+
+        }
+    }
+
+    resetInput();
+
+
+
+
+    return /* addRow */ function (playerId) {
         let guess = getPlayer(playerId)
         console.log(guess)
 
         let content = setContent(guess)
+
+        game.guesses.push(playerId)
+        updateState(playerId)
+
+        resetInput();
+
+        if (gameEnded(playerId)) {
+            // updateStats(game.guesses.length);
+
+            if (playerId == game.solution.id) {
+                unblur("success");
+                //success();
+            }
+
+            if (game.guesses.length == 8) {
+                //gameOver();
+                unblur("gameOver")
+            }
+        }
+
+
         showContent(content, guess)
+
+
     }
 }
