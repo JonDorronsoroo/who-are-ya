@@ -1,12 +1,10 @@
 // YOUR CODE HERE :  
 
-// YOUR CODE HERE :  
-
 import { fetchJSON } from "./loaders.js";
 import { getSolution, differenceInDays } from "./main.js";
 import { stringToHTML, higher, lower, stats, headless, toggle } from "./fragments.js";
 import { initState, updateStats } from "./stats.js";
-export { setupRows }
+export { setupRows}
 
 // From: https://stackoverflow.com/a/7254108/243532
 function pad(a, b) {
@@ -15,7 +13,6 @@ function pad(a, b) {
 
 const delay = 350;
 const attribs = ['nationality', 'leagueId', 'teamId', 'position', 'birthdate']
-
 
 let setupRows = function (game) {
 
@@ -118,7 +115,7 @@ let setupRows = function (game) {
             `<img src="https://playfootball.games/media/competitions/${leagueToFlag(guess.leagueId)}.png" alt="" style="width: 60%;">`,
             `<img src="https://cdn.sportmonks.com/images/soccer/teams/${guess.teamId % 32}/${guess.teamId}.png" alt="" style="width: 60%;">`,
             `${guess.position}`,
-            `${getAge(guess.birthdate)}`/* YOUR CODE HERE */ + flecha
+            `${getAge(guess.birthdate) + flecha}`
         ]
     }
 
@@ -184,21 +181,24 @@ let setupRows = function (game) {
         if (gameEnded(playerId)) {
             updateStats(game.guesses.length);
 
-          
-
             if (playerId == game.solution.id) {
                 unblur("success");
-                showStats(0)
+                showStats("2000")
             }
 
             if (game.guesses.length == 8) {
                 unblur("gameOver");
-                showStats(0)
+                showStats("2000")
             }
-            
+            let interval = setInterval(function(){
+                let now = new Date();
+                let restante = (23 - now.getHours()) + " : " + (59 - now.getMinutes()) + " : " + (59 - now.getSeconds())
+                document.getElementById("nextPlayer").innerHTML = restante
+              }, 1000)
         }
 
 
         showContent(content, guess)
     }
+    
 }

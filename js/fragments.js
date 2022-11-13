@@ -1,18 +1,24 @@
 export const folder = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="h-6 w-6" name="folder"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>`;
 export const leftArrow = `<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" class="h-4 w-4 absolute right-0 -bottom-0.5" name="leftArrowInCircle"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path></svg>`;
 
-export const higher = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="white" aria-hidden="true" width="25" style="margin-right: -8px; margin-left: -3px;"><path fill-rule="evenodd" d="M5.293 7.707a1 1 0010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 10 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>';
-
-export const lower = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"fill="white" aria-hidden="true" width="25" style="margin-right: -8px;margin-left: -3px;"><path fill-rule="evenodd" d="M14.707 12.293a1 1 0010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a11 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+export const higher = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20
+" fill="white" aria-hidden="true" width="25" style="margin-right: -8px
+; margin-left: -3px;"><path fill-rule="evenodd" d="M5.293 7.707a1 1 0
+010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1
+0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>`;
+export const lower = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+fill="white" aria-hidden="true" width="25" style="margin-right: -8px;
+margin-left: -3px;"><path fill-rule="evenodd" d="M14.707 12.293a1 1 0
+010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1
+1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>`;
 
 import {getStats} from "./stats.js"
 export const stats = function () {
-  const {winDistribution, gamesFailed, currentStreak, bestStreak, totalGames, successRate} = JSON.parse(getStats("gameStats"));
+  const {bestStreak, currentStreak, gamesFailed, successRate, totalGames, winDistribution} = JSON.parse(getStats("gameStats"))[0];
 
   let blocks = `<div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden sh
 adow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6 dark:bg-gray-800"><div class="absolute right-4 top-4" id="closedialog"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" class="h-6 w-6 cursor-pointer dark:stroke-white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><div class="text-center"><h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100" id="headlessui-dialog-title-7">Statistics</h3><div class="mt-2"><div class="flex justify-center my-2"><div class="items-center justify-center m-1 w-1/4 dark:text-white"><div class="text-3xl font-bold">${totalGames}</div><div class="text-xs">Total tries</div></div><div class="items-center justify-center m-1 w-1/4 dark:text-white"><div class="text-3xl font-bold">${successRate}%</div><div class="text-xs">Success rate</div></div><div class="items-center justify-center m-1 w-1/4 dark:text-white"><div class="text-3xl font-bold">${currentStreak}</div><div class="text-xs">Current streak</div></div><div class="items-center justify-center m-1 w-1/4 dark:text-white"><div class="text-3xl font-bold">${bestStreak}</div><div class="text-xs">Best streak</div></div></div>
 <h4 class="cursor-pointer text-lg leading-6 font-medium text-gray-900 dark:text-gray-100" id="showHide">Show Guess Distribution</h4><div class="columns-1 justify-left m-2 text-sm dark:text-white">`
-
   let sum = winDistribution.reduce(function (previousValue, currentValue) {
       return previousValue + currentValue;
   });
@@ -34,6 +40,7 @@ adow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full s
                   <div>
                       <h5>New footballer:</h5>
                       <span class="text-lg font-medium text-gray-900 dark:text-gray-100" id="nextPlayer"></span>
+
                   </div>
                  <!-- <button type="button" class="rounded-md border border-transparent shadow-sm px-4 pt-1 pb-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm" tabindex="0"><span class="block text-2xl tracking-wide font-bold leading-7">Share</span>
                  <span class="block text-xs tracking-tight font-light">#HashTag</span></button> -->

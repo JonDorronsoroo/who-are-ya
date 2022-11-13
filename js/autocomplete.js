@@ -10,7 +10,8 @@ function autocomplete(inp, game) {
 
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
-    let currentFocus;    /*execute a function when someone writes in the text field:*/
+    let currentFocus;
+    /*execute a function when someone writes in the text field:*/
     inp.addEventListener("input", function (e) {
         let a, b, i, val = this.value;
         /*close any already open lists of autocompleted values*/
@@ -28,8 +29,7 @@ function autocomplete(inp, game) {
         /*for each item in the array...*/
         for (i = 0; i < players.length; i++) {
             /*check if the item starts with the same letters as the text field value:*/
-            if ( val == players[i].name.substr(0, val.length).toLowerCase()) {
-
+            if ( val.toLowerCase() == players[i].name.substr(0, val.length).toLowerCase()) {
 
                 b = document.createElement("DIV");
                 b.classList.add('flex', 'items-start', 'gap-x-3', 'leading-tight', 'uppercase', 'text-sm');
@@ -37,7 +37,7 @@ function autocomplete(inp, game) {
 
                 /*make the matching letters bold:*/
                 b.innerHTML += `<div class='self-center'>
-                                    <span class='font-bold'><b> ${players[i].name.substr(0,val.length)} </b></span><span class>${players[i].name.substr(val.length,players[i].name.length)}</span>
+                                    <span class='font-bold'> <b> ${players[i].name.substr(0, val.length)} </b> </span><span class> ${players[i].name.substr(val.length, players[i].name.length)} </span>
                                     <input type='hidden' name='name' value='${players[i].name}'>
                                     <input type='hidden' name='id' value='${players[i].id}'>
                                 </div>`;
@@ -52,8 +52,7 @@ function autocomplete(inp, game) {
                     closeAllLists();
 
                     /* YOUR CODE HERE */
-                  addRow(this.getElementsByTagName("input")[1].value)
-
+                    addRow(this.getElementsByTagName("input")[1].value)
                 });
                 a.appendChild(b);
             }
@@ -86,12 +85,7 @@ function autocomplete(inp, game) {
     });
 
     inp.onfocus = function(event){
-        inp.value = "";
-
-
-
-
-        
+        inp.value = ""
     }
 
     // players.find ( p => { return p.id == 47323 })
