@@ -1,16 +1,17 @@
 // YOUR CODE HERE :  
-// .... stringToHTML ....
-// .... setupRows .....
-//import{getStats, successRate, updateStats} from"./stats.js";
-//import { stats } from "./fragments.js";
+
+// YOUR CODE HERE :  
 
 import { fetchJSON } from "./loaders.js";
 import { getSolution, differenceInDays } from "./main.js";
-import { stringToHTML } from "./fragments.js";
-import { higher, lower } from "./fragments.js";
-import { initState } from "./stats.js";
+import { stringToHTML, higher, lower, stats, headless, toggle } from "./fragments.js";
+import { initState, updateStats } from "./stats.js";
 export { setupRows }
 
+// From: https://stackoverflow.com/a/7254108/243532
+function pad(a, b) {
+    return (1e15 + a + '').slice(-b);
+}
 
 const delay = 350;
 const attribs = ['nationality', 'leagueId', 'teamId', 'position', 'birthdate']
@@ -19,7 +20,6 @@ const attribs = ['nationality', 'leagueId', 'teamId', 'position', 'birthdate']
 let setupRows = function (game) {
 
     let [state, updateState] = initState('WAYgameState', game.solution.id)
-
 
     function leagueToFlag(leagueId) {
         // YOUR CODE HERE
@@ -68,6 +68,7 @@ let setupRows = function (game) {
             }
         }
     }
+
     function unblur(outcome) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -87,17 +88,38 @@ let setupRows = function (game) {
         })
     }
 
-    function setContent(guess) {
+    function showStats(timeout) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                document.body.appendChild(stringToHTML(headless(stats())));
+                document.getElementById("showHide").onclick = toggle;
+                bindClose();
+                resolve();
+            }, timeout)
+        })
+    }
 
+    function bindClose() {
+        document.getElementById("closedialog").onclick = function () {
+            document.body.removeChild(document.body.lastChild)
+            document.getElementById("mistery").classList.remove("hue-rotate-180", "blur")
+        }
+    }
+
+    function setContent(guess) {
+        let flecha = ""
+        if (getAge(guess.birthdate) > getAge(game.solution.birthdate)) {
+            flecha = lower
+        } else if (getAge(guess.birthdate) < getAge(game.solution.birthdate)) {
+            flecha = higher
+        }
         return [
             `<img src="https://playfootball.games/who-are-ya/media/nations/${guess.nationality.toLowerCase()}.svg" alt="" style="width: 60%;">`,
             `<img src="https://playfootball.games/media/competitions/${leagueToFlag(guess.leagueId)}.png" alt="" style="width: 60%;">`,
             `<img src="https://cdn.sportmonks.com/images/soccer/teams/${guess.teamId % 32}/${guess.teamId}.png" alt="" style="width: 60%;">`,
             `${guess.position}`,
-            `${getAge(guess.birthdate)}`
-
+            `${getAge(guess.birthdate)}`/* YOUR CODE HERE */ + flecha
         ]
-
     }
 
     function showContent(content, guess) {
@@ -123,40 +145,32 @@ let setupRows = function (game) {
         playersNode.prepend(stringToHTML(child))
     }
 
-    function resetInput() {
-        // YOUR CODE HERE
-        let item = JSON.parse(localStorage.getItem("WAYgameState"));
-        document.getElementById("myInput").value = "Guess " + item[0].guesses.length + " of 8";
-
-    }
-
-
     let getPlayer = function (playerId) {
         // YOUR CODE HERE 
         let jokalaria = game.players.filter(jokalaria => jokalaria.id == playerId);
         return jokalaria[0]
     }
 
+    function resetInput() {
+        // YOUR CODE HERE
+        let item = JSON.parse(localStorage.getItem("WAYgameState"))
+        document.getElementById("myInput").value = "Guess " + item[0].guesses.length + " of 8"
+    }
+
     function gameEnded(lastGuess) {
         // YOUR CODE HERE
-        if ((lastGuess == game.solution.id) || (game.guesses.length == 8 && lastGuess != game.solution.id)) {
-            return true;
+        if (lastGuess == game.solution.id || (game.guesses.length == 8 && lastGuess != game.solution.id)) {
+            return true
         } else {
-            return false;
-
-
-
-
-
+            return false
         }
+
     }
 
     resetInput();
 
-
-
-
     return /* addRow */ function (playerId) {
+
         let guess = getPlayer(playerId)
         console.log(guess)
 
@@ -168,22 +182,23 @@ let setupRows = function (game) {
         resetInput();
 
         if (gameEnded(playerId)) {
-            //updateStats(game.guesses.length);
+            updateStats(game.guesses.length);
+
+          
 
             if (playerId == game.solution.id) {
                 unblur("success");
-                //success();
+                showStats(0)
             }
 
             if (game.guesses.length == 8) {
-                //gameOver();
-                unblur("gameOver")
+                unblur("gameOver");
+                showStats(0)
             }
+            
         }
 
 
         showContent(content, guess)
-
-
     }
 }
