@@ -1,6 +1,8 @@
 // YOUR CODE HERE :  
 // .... stringToHTML ....
 // .... setupRows .....
+//import{getStats, successRate, updateStats} from"./stats.js";
+//import { stats } from "./fragments.js";
 
 import { fetchJSON } from "./loaders.js";
 import { getSolution, differenceInDays } from "./main.js";
@@ -166,7 +168,7 @@ let setupRows = function (game) {
         resetInput();
 
         if (gameEnded(playerId)) {
-            // updateStats(game.guesses.length);
+            //updateStats(game.guesses.length);
 
             if (playerId == game.solution.id) {
                 unblur("success");
